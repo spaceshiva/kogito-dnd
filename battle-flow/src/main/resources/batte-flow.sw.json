@@ -1,0 +1,132 @@
+{
+  "id": "battleflow",
+  "name": "Kogito D&D Battle Flow",
+  "version": "1.0",
+  "start": "calcRoundInitiative",
+  "functions": [
+    {
+      "name": "calculateInitiative",
+      "metadata": {
+        "interface": "io.spaceshiva.kogito.dnd.battle.flow.functions.RoundInitiativeCalculator",
+        "operation": "calculate",
+        "type": "service"
+      }
+    },
+    {
+      "name": "defineActiveCharacter",
+      "metadata": {
+        "interface": "io.spaceshiva.kogito.dnd.battle.flow.functions.RoundInitiativeCalculator",
+        "operation": "defineActiveCharacter",
+        "type": "service"
+      }
+    },
+    {
+      "name": "calculateAttack",
+      "metadata": {
+        "interface": "io.spaceshiva.kogito.dnd.battle.flow.functions.AttackCalculator",
+        "operation": "calculate",
+        "type": "service"
+      }
+    }
+  ],
+  "events": [
+    {
+      "kind": "produced",
+      "name": "battleIsOver",
+      "type": "kogito.dnd.battle.over"
+    },
+    {
+      "kind": "produced",
+      "name": "roundLogger",
+      "type": "kogito.dnd.battle.round.log"
+    }
+  ],
+  "states": [
+    {
+      "name": "calcRoundInitiative",
+      "type": "operation",
+      "actions": [
+        {
+          "name": "calcRoundInit",
+          "functionRef": {
+            "refName": "calculateInitiative",
+            "arguments": {
+              "battleContext": "$."
+            }
+          }
+        }
+      ],
+      "transition": "setActiveCharacter"
+    },
+    {
+      "name": "setActiveCharacter",
+      "type": "operation",
+      "actions": [
+        {
+          "name": "setActiveChar",
+          "functionRef": {
+            "refName": "defineActiveCharacter",
+            "arguments": {
+              "battleContext": "$."
+            }
+          }
+        }
+      ],
+      "transition": "performBattle"
+    },
+    {
+      "name": "performBattle",
+      "type": "operation",
+      "actions": [
+        {
+          "name": "calcAttack",
+          "functionRef": {
+            "refName": "calculateAttack",
+            "arguments": {
+              "battleContext": "$."
+            }
+          }
+        }
+      ],
+      "transition": {
+          "nextState": "checkGameIsOver",
+          "produceEvents": [{
+              "eventRef": "roundLogger"
+          }]
+      }
+    },
+    {
+      "name": "checkGameIsOver",
+      "type": "switch",
+      "dataConditions": [
+        {
+          "condition": "{{ $.[?(@.gameOver == true)] }}",
+          "transition": "produceGameOver"
+        },
+        {
+          "condition": "{{ $.[?(@.gameOver == false)] }}",
+          "transition": "setActiveCharacter"
+        }
+      ],
+      "default": {
+        "transition": "produceGameOver"
+      }
+    },
+    {
+      "name": "produceGameOver",
+      "type": "inject",
+      "data": {
+        "initiativeQueue": [],
+        "activeCharacter": null,
+        "turn": 0
+      },
+      "end": {
+        "produceEvents": [
+          {
+            "eventRef": "battleIsOver"
+          }
+        ]
+      }
+    }
+  ]
+}
