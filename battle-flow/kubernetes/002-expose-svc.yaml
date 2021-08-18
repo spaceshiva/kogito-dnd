@@ -1,0 +1,21 @@
+# use this yaml or `kubectl expose deployment ks-battle-flow -n kogito --type=NodePort --port=8080 --name=battle-flow-exposed`
+# having deployed the KogitoSource
+# on minikube `minikube service battle-flow-exposed --url -n <namespace>`
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ks-battle-flow
+    knative-eventing-source: kogito-source-controller
+    knative-eventing-source-name: battle-flow
+  name: battle-flow-exposed
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: ks-battle-flow
+  sessionAffinity: None
+  type: NodePort

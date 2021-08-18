@@ -23,14 +23,14 @@ public class AttackCalculator {
         final Battle battle = jsonConverter.fromJson(jsonNode);
         // we don't have an active char, bye
         // TODO: once we have error handling, throw an exception
-        if (battle.getActiveCharacter() == null) {
+        if (battle.getActiveCharacterId() == null || battle.getActiveCharacterId().isEmpty()) {
             return jsonConverter.toJson(battle);
         }
         // the active char will battle the other one
-        if (battle.getActiveCharacter().equals(battle.getPlayer())) {
-            battle.getEnemy().setDamage(this.fight(battle.getPlayer(), battle.getEnemy()));
+        if (battle.getActiveCharacterId().equals(battle.getPlayer().getId())) {
+            battle.getEnemy().addDamage(this.fight(battle.getPlayer(), battle.getEnemy()));
         } else {
-            battle.getPlayer().setDamage(this.fight(battle.getEnemy(), battle.getPlayer()));
+            battle.getPlayer().addDamage(this.fight(battle.getEnemy(), battle.getPlayer()));
         }
         return jsonConverter.toJson(battle);
     }

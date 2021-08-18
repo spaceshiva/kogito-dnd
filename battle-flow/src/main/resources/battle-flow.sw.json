@@ -117,7 +117,7 @@
       "type": "inject",
       "data": {
         "initiativeQueue": [],
-        "activeCharacter": null,
+        "activeCharacterId": null,
         "turn": 0
       },
       "end": {

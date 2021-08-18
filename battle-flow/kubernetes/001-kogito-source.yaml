@@ -1,0 +1,19 @@
+# A default broker to have the cloudevents-player connected to
+apiVersion: eventing.knative.dev/v1
+kind: Broker
+metadata:
+  name: default
+---
+# Representation of this workflow as a Knative Eventing Source
+# To deploy this Knative Source, see https://github.com/ricardozanini/eventing-kogito
+apiVersion: kogito.knative.dev/v1alpha1
+kind: KogitoSource
+metadata:
+  name: battle-flow
+spec:
+  image: quay.io/spaceshiva/kogito-dnd-battle-flow:0.1.0
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default

@@ -2,13 +2,16 @@ package io.spaceshiva.kogito.dnd.battle.flow;
 
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a character in the game
  */
 public class Character {
+    private String id;
     /**
      * Their name, for example "Conan"
      */
@@ -38,6 +41,27 @@ public class Character {
      */
     @JsonProperty("class")
     private String clazz;
+
+    public Character() {
+        this.id = UUID.randomUUID().toString();
+    }
+
+    @JsonCreator
+    public Character(@JsonProperty("id") final String id) {
+        if (id == null || id.isEmpty()) {
+            this.id = UUID.randomUUID().toString();
+        } else {
+            this.id = id;
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -77,6 +101,10 @@ public class Character {
 
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public void addDamage(int damage) {
+        this.damage += damage;
     }
 
     public int getArmor() {

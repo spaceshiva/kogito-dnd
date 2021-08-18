@@ -1,0 +1,11 @@
+services:
+  battle-flow:
+    image: quay.io/spaceshiva/kogito-dnd-battle-flow:0.1.0
+    ports:
+      - "8080:8080"
+    environment:
+      K_SINK: http://sink:8080/
+    links:
+      - sink
+  sink:
+    image: gcr.io/knative-releases/knative.dev/eventing-contrib/cmd/event_display

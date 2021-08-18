@@ -12,13 +12,13 @@ public class Battle {
 
     private Character player;
     private Character enemy;
-    private Character activeCharacter;
-    private HashMap<Integer, Character> initiativeQueue;
+    private String activeCharacterId;
+    private HashMap<Integer, String> initiativeQueue;
     private int round;
     private int turn;
 
     public Battle() {
-        this.round = 1;
+        this.round = 0;
         this.turn = 0;
         this.initiativeQueue = new HashMap<>();
     }
@@ -39,12 +39,12 @@ public class Battle {
         this.enemy = enemy;
     }
 
-    public Character getActiveCharacter() {
-        return activeCharacter;
+    public String getActiveCharacterId() {
+        return activeCharacterId;
     }
 
-    public void setActiveCharacter(Character activeCharacter) {
-        this.activeCharacter = activeCharacter;
+    public void setActiveCharacterId(String activeCharacterId) {
+        this.activeCharacterId = activeCharacterId;
     }
 
     public int getRound() {
@@ -63,12 +63,16 @@ public class Battle {
         this.turn = turn;
     }
 
-    public HashMap<Integer, Character> getInitiativeQueue() {
+    public HashMap<Integer, String> getInitiativeQueue() {
         return initiativeQueue;
     }
 
-    public void setInitiativeQueue(HashMap<Integer, Character> initiativeQueue) {
+    public void setInitiativeQueue(HashMap<Integer, String> initiativeQueue) {
         this.initiativeQueue = initiativeQueue;
+    }
+
+    public void incrementRound() {
+        this.round++;
     }
 
     /**
